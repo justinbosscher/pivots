@@ -1,0 +1,48 @@
+//@version=3
+// This is a script to plot the Daily Pivots
+///////////////////////////////////////////////////////////////////////////////////////////
+
+study("Pivot Points - jbWeld", shorttitle="Pivot Points", overlay=true)
+
+// TODO: Create drop-down menu for precision and use it in study() function above
+// 2 decimals is ideal for futures contracts, BUT not Forex, Equities, Crypto
+decimals = input(title="Precision", defval=2)
+
+
+// Get high, low, close from previous period; default is set to day
+lookback = input(title="Timeframe", type=resolution, defval="D")
+h = security(tickerid, lookback, high[1])
+l = security(tickerid, lookback, low[1])
+c = security(tickerid, lookback, close[1])
+
+
+// Calculate levels
+//////////////////////////////////////////////////////////////////////////////////////////
+PP = (h + l + c) / 3      // Pivot
+S1 = 2 * PP - h           // S1
+S2 = PP - (h - l)         // S2
+S3 = S1 - (h - l)         // S3
+R1 = 2 * PP - l           // R1
+R2 = PP + h - l           // R2
+R3 = R1 + h - l           // R3
+
+
+// Plot the lines with user input
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// User input for line width, default to 1
+width = input(title="Line Width", defval=2)
+
+
+// Red color shades found here: https://www.color-hex.com/color/843f3f
+plot(S3, color=#b58b8b, title="S3", style=circles, linewidth=width)         // S3
+plot(S2, color=#a87878, title="S2", style=circles, linewidth=width)         // S2
+plot(S1, color=#9c6565, title="S1", style=circles, linewidth=width)         // S1
+
+// Neon color found here: https://www.color-hex.com/color/ccf62e
+plot(PP, color=#ccf62e, title="PP", style=circles, linewidth=width)         // Pivot
+
+// Blue color shades found here: https://www.color-hex.com/color/001b8a
+plot(R1, color=#6676b8, title="R1", style=circles, linewidth=width)         // R1
+plot(R2, color=#7f8dc4, title="R2", style=circles, linewidth=width)         // R2
+plot(R3, color=#99a3d0, title="R3", style=circles, linewidth=width)         // R3
